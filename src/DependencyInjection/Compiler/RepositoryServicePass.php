@@ -38,10 +38,16 @@ class RepositoryServicePass implements CompilerPassInterface
         }
     }
     
-    private function scanAndRegisterRepositories(ContainerBuilder $container, string $entityDir, string $entityPrefix, string $repositoryPrefix): void
+private function scanAndRegisterRepositories(ContainerBuilder $container, string $entityDir, string $entityPrefix, string $repositoryPrefix): void
     {
+        // Validate and sanitize entity directory path
+        $entityDir = $this->validateEntityDirectory($entityDir);
+        if ($entityDir === null) {
+            return;
+        }
+        
         $pattern = rtrim($entityDir, '/') . '/*.php';
-        $files = glob($pattern);
+        $files = glob($pattern, GLOB_NOSORT);
         
         if ($files === false) {
             return;
@@ -65,6 +71,28 @@ class RepositoryServicePass implements CompilerPassInterface
             
             $serviceId = 'repository.' . strtolower(str_replace('\\', '_', $entityClass));
             $container->setDefinition($serviceId, $definition);
+}
+    }
+    
+    /**
+     * Validate entity directory to prevent path traversal attacks
+     */
+    private function validateEntityDirectory(string $entityDir): ?string
+    {
+        // Remove any path traversal attempts
+        $entityDir = str_replace(['../', '..\\'], '', $entityDir);
+        
+        // Ensure it's a real path and exists
+        $realPath = realpath($entityDir);
+        if ($realPath === false || !is_dir($realPath)) {
+            return null;
         }
+        
+        // Additional security: ensure it's within expected project structure
+        if (!str_contains($realPath, '/src/') && !str_contains($realPath, '\\src\\')) {
+            return null;
+        }
+        
+        return $realPath;
     }
 }
