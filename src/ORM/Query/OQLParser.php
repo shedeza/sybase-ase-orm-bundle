@@ -50,7 +50,7 @@ class OQLParser
         }
         
         $oql = trim($oql);
-        $cacheKey = md5($oql);
+        $cacheKey = hash('sha256', $oql);
         
         // Verificar cache para evitar reparsear consultas idénticas
         if (!isset(self::$parseCache[$cacheKey])) {
