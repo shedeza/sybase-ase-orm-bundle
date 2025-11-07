@@ -6,7 +6,7 @@
         "config/": "%CONFIG_DIR%/"
     },
     "env": {
-        "DATABASE_URL": "sybase://sa:password@localhost:5000/mydb?charset=utf8"
+        "DATABASE_SYBASE_URL": "sybase://sa:password@localhost:5000/mydb?charset=utf8"
     },
     "gitignore": [
         "/.env.local",
@@ -16,16 +16,21 @@
     "post-install-output": [
         "<bg=blue;fg=white>              Sybase ASE ORM Bundle              </>",
         "",
-        "<info>Getting started:</info>",
+        "<info>✅ Bundle installed successfully!</info>",
         "",
-        "  * Configure your database connection in <comment>.env</comment>:",
-        "    <comment>DATABASE_URL=sybase://username:password@host:port/database?charset=utf8</comment>",
+        "<info>Next steps:</info>",
         "",
-        "  * Create your first entity in <comment>src/Entity/</comment>",
+        "  1. <comment>Update DATABASE_SYBASE_URL in .env:</comment>",
+        "     <comment>DATABASE_SYBASE_URL=sybase://username:password@host:port/database?charset=utf8</comment>",
         "",
-        "  * Use the EntityManager in your controllers:",
-        "    <comment>public function index(EntityManager $entityManager): Response</comment>",
+        "  2. <comment>Configuration file created:</comment> <comment>config/packages/sybase_ase_orm.yaml</comment>",
         "",
-        "<info>Documentation:</info> <comment>https://github.com/shedeza/sybase-ase-orm-bundle</comment>"
+        "  3. <comment>Create your first entity:</comment>",
+        "     <comment>php bin/console make:entity</comment> (if using MakerBundle)",
+        "",
+        "  4. <comment>Use EntityManager in controllers:</comment>",
+        "     <comment>public function index(EntityManager $entityManager): Response</comment>",
+        "",
+        "<info>📖 Documentation:</info> <comment>https://github.com/shedeza/sybase-ase-orm-bundle</comment>"
     ]
 }

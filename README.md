@@ -41,7 +41,7 @@ sybase_ase_orm:
   default_entity_manager: default
   
   connections:
-    default: '%env(resolve:DATABASE_URL)%'
+    default: '%env(resolve:DATABASE_SYBASE_URL)%'
   
   entity_managers:
     default:
@@ -57,7 +57,7 @@ Agregar en tu archivo `.env`:
 
 ```env
 # Format: sybase://username:password@host:port/database?charset=utf8
-DATABASE_URL=sybase://sa:your_password@localhost:5000/mydb?charset=utf8
+DATABASE_SYBASE_URL=sybase://sa:your_password@localhost:5000/mydb?charset=utf8
 ```
 
 ### Configuración Alternativa (Detallada)

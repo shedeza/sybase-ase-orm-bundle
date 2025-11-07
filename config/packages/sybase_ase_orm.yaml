@@ -1,6 +1,9 @@
 sybase_ase_orm:
+    default_connection: default
+    default_entity_manager: default
+    
     connections:
-        default: '%env(resolve:DATABASE_URL)%'
+        default: '%env(resolve:DATABASE_SYBASE_URL)%'
     
     entity_managers:
         default:
@@ -10,6 +13,3 @@ sybase_ase_orm:
                     type: attribute
                     dir: '%kernel.project_dir%/src/Entity'
                     prefix: 'App\Entity'
-    
-    default_connection: default
-    default_entity_manager: default

@@ -44,7 +44,7 @@ sybase_ase_orm:
 
 ```env
 # .env
-DATABASE_URL=sybase://username:password@host:port/database?charset=utf8
+DATABASE_SYBASE_URL=sybase://username:password@host:port/database?charset=utf8
 ```
 
 ## Definición de Entidades
