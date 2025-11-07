@@ -1,0 +1,11 @@
+{
+    "shedeza/sybase-ase-orm-bundle": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "auto-generated"
+        }
+    }
+}

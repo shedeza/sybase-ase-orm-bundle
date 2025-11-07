@@ -1,0 +1,70 @@
+<?php
+
+namespace Shedeza\SybaseAseOrmBundle\DependencyInjection;
+
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Shedeza\SybaseAseOrmBundle\DBAL\Connection;
+use Shedeza\SybaseAseOrmBundle\DBAL\DatabaseUrlParser;
+use Shedeza\SybaseAseOrmBundle\ORM\EntityManager;
+
+class SybaseAseOrmExtension extends Extension
+{
+    public function load(array $configs, ContainerBuilder $container): void
+    {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('services.yaml');
+
+        // Register connections
+        foreach ($config['connections'] as $name => $connectionConfig) {
+            // Parse database URL if provided
+            if (isset($connectionConfig['url'])) {
+                $connectionConfig = DatabaseUrlParser::parseUrl($connectionConfig['url']);
+            }
+            
+            $container->register("sybase_ase_orm.connection.$name", Connection::class)
+                ->setArguments([$connectionConfig])
+                ->setPublic(false);
+        }
+
+        // Register entity managers
+        foreach ($config['entity_managers'] as $name => $emConfig) {
+            $connectionName = $emConfig['connection'];
+            
+            if (!isset($config['connections'][$connectionName])) {
+                throw new \InvalidArgumentException("Connection '{$connectionName}' not found for entity manager '{$name}'");
+            }
+            
+            $container->register("sybase_ase_orm.entity_manager.$name", EntityManager::class)
+                ->setArguments([
+                    $container->getReference("sybase_ase_orm.connection.$connectionName"),
+                    $emConfig['mappings']
+                ])
+                ->setPublic(false);
+        }
+
+        // Set default services
+        $defaultConnection = $config['default_connection'];
+        $defaultEntityManager = $config['default_entity_manager'];
+        
+        if (!isset($config['connections'][$defaultConnection])) {
+            throw new \InvalidArgumentException("Default connection '{$defaultConnection}' not found");
+        }
+        
+        if (!isset($config['entity_managers'][$defaultEntityManager])) {
+            throw new \InvalidArgumentException("Default entity manager '{$defaultEntityManager}' not found");
+        }
+
+        $container->setAlias('sybase_ase_orm.connection', "sybase_ase_orm.connection.$defaultConnection")
+            ->setPublic(false);
+        $container->setAlias('sybase_ase_orm.entity_manager', "sybase_ase_orm.entity_manager.$defaultEntityManager")
+            ->setPublic(true);
+        $container->setAlias(EntityManager::class, 'sybase_ase_orm.entity_manager')
+            ->setPublic(true);
+    }
+}

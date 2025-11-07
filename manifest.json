@@ -1,0 +1,11 @@
+{
+    "bundles": {
+        "Shedeza\\SybaseAseOrmBundle\\SybaseAseOrmBundle": ["all"]
+    },
+    "copy-from-recipe": {
+        "config/": "%CONFIG_DIR%/"
+    },
+    "env": {
+        "SYBASE_DATABASE_URL": "sybase://sa:password@localhost:5000/mydb?charset=utf8"
+    }
+}
