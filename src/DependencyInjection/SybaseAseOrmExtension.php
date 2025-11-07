@@ -6,6 +6,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Shedeza\SybaseAseOrmBundle\DBAL\Connection;
 use Shedeza\SybaseAseOrmBundle\DBAL\DatabaseUrlParser;
 use Shedeza\SybaseAseOrmBundle\ORM\EntityManager;
@@ -42,7 +43,7 @@ class SybaseAseOrmExtension extends Extension
             
             $container->register("sybase_ase_orm.entity_manager.$name", EntityManager::class)
                 ->setArguments([
-                    $container->getReference("sybase_ase_orm.connection.$connectionName"),
+                    new Reference("sybase_ase_orm.connection.$connectionName"),
                     $emConfig['mappings']
                 ])
                 ->setPublic(false);
