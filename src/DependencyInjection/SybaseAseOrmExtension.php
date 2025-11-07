@@ -16,6 +16,30 @@ class SybaseAseOrmExtension extends Extension
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
+        
+        // Provide default configuration if none exists
+        if (empty($configs) || (count($configs) === 1 && empty($configs[0]))) {
+            $configs = [[
+                'connections' => [
+                    'default' => '%env(DATABASE_SYBASE_URL)%'
+                ],
+                'entity_managers' => [
+                    'default' => [
+                        'connection' => 'default',
+                        'mappings' => [
+                            'App' => [
+                                'type' => 'attribute',
+                                'dir' => '%kernel.project_dir%/src/Entity',
+                                'prefix' => 'App\Entity'
+                            ]
+                        ]
+                    ]
+                ],
+                'default_connection' => 'default',
+                'default_entity_manager' => 'default'
+            ]];
+        }
+        
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
