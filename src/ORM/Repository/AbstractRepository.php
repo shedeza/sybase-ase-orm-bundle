@@ -13,9 +13,9 @@ protected ?EntityManager $entityManager = null;
     protected string $entityClass = '';
     protected ?EntityMetadata $metadata = null;
 
-public function __construct(?EntityManager $entityManager = null, string $entityClass = '')
+public function __construct($entityManager = null, string $entityClass = '')
     {
-        if ($entityManager !== null && !empty($entityClass)) {
+        if ($entityManager instanceof EntityManager && !empty($entityClass)) {
             $this->initialize($entityManager, $entityClass);
         }
     }

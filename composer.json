@@ -1,7 +1,7 @@
 {
     "name": "shedeza/sybase-ase-orm-bundle",
     "description": "Symfony Bundle for Sybase ASE ORM",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "type": "symfony-bundle",
     "license": "MIT",
     "require": {
