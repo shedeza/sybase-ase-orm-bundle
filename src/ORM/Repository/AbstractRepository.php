@@ -9,16 +9,22 @@ use Shedeza\SybaseAseOrmBundle\Exception\ConfigurationException;
 
 abstract class AbstractRepository implements RepositoryInterface
 {
-    protected EntityManager $entityManager;
-    protected string $entityClass;
-    protected EntityMetadata $metadata;
+protected ?EntityManager $entityManager = null;
+    protected string $entityClass = '';
+    protected ?EntityMetadata $metadata = null;
 
 public function __construct(?EntityManager $entityManager = null, string $entityClass = '')
     {
-        if ($entityManager === null) {
-            throw ConfigurationException::entityManagerNotConfigured();
+        if ($entityManager !== null && !empty($entityClass)) {
+            $this->initialize($entityManager, $entityClass);
         }
-        
+    }
+    
+    /**
+     * Initialize repository with EntityManager and entity class
+     */
+    public function initialize(EntityManager $entityManager, string $entityClass): void
+    {
         if (empty($entityClass) || !class_exists($entityClass)) {
             throw new \InvalidArgumentException("Invalid entity class: {$entityClass}");
         }
@@ -27,9 +33,21 @@ public function __construct(?EntityManager $entityManager = null, string $entity
         $this->entityClass = $entityClass;
         $this->metadata = $entityManager->getClassMetadata($entityClass);
     }
-
-    public function find(mixed $id): ?object
+    
+    /**
+     * Check if repository is properly initialized
+     */
+    private function ensureInitialized(): void
     {
+        if ($this->entityManager === null) {
+            throw ConfigurationException::entityManagerNotConfigured();
+        }
+    }
+
+public function find(mixed $id): ?object
+    {
+        $this->ensureInitialized();
+        
         if ($id === null || $id === '') {
             return null;
         }
@@ -37,8 +55,10 @@ public function __construct(?EntityManager $entityManager = null, string $entity
         return $this->entityManager->find($this->entityClass, $id);
     }
 
-    public function findAll(): array
+public function findAll(): array
     {
+        $this->ensureInitialized();
+        
         $sql = sprintf('SELECT * FROM %s', $this->metadata->getFullTableName());
         $stmt = $this->entityManager->getConnection()->executeQuery($sql);
         
@@ -50,8 +70,10 @@ public function __construct(?EntityManager $entityManager = null, string $entity
         return $entities;
     }
 
-    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
+public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
+        $this->ensureInitialized();
+        
         if ($limit !== null && $limit < 0) {
             throw new \InvalidArgumentException('Limit must be a positive integer');
         }
@@ -110,14 +132,18 @@ public function __construct(?EntityManager $entityManager = null, string $entity
         return $entities;
     }
 
-    public function findOneBy(array $criteria): ?object
+public function findOneBy(array $criteria): ?object
     {
+        $this->ensureInitialized();
+        
         $results = $this->findBy($criteria, null, 1);
         return $results[0] ?? null;
     }
 
-    public function count(array $criteria = []): int
+public function count(array $criteria = []): int
     {
+        $this->ensureInitialized();
+        
         $sql = sprintf('SELECT COUNT(*) as cnt FROM %s', $this->metadata->getFullTableName());
         $params = [];
         
@@ -146,8 +172,10 @@ public function __construct(?EntityManager $entityManager = null, string $entity
         }
     }
 
-    protected function createQuery(string $oql): Query
+protected function createQuery(string $oql): Query
     {
+        $this->ensureInitialized();
+        
         return $this->entityManager->createQuery($oql);
     }
 
