@@ -1,6 +1,6 @@
 # Sybase ASE ORM Bundle
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/shedeza/sybase-ase-orm-bundle)
+[![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)](https://github.com/shedeza/sybase-ase-orm-bundle)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![PHP](https://img.shields.io/badge/php-%3E%3D8.1-blue.svg)](https://php.net/)
 [![Symfony](https://img.shields.io/badge/symfony-%3E%3D6.0-blue.svg)](https://symfony.com/)
@@ -41,7 +41,7 @@ sybase_ase_orm:
   default_entity_manager: default
   
   connections:
-    default: '%env(resolve:SYBASE_DATABASE_URL)%'
+    default: '%env(resolve:DATABASE_URL)%'
   
   entity_managers:
     default:
@@ -57,7 +57,7 @@ Agregar en tu archivo `.env`:
 
 ```env
 # Format: sybase://username:password@host:port/database?charset=utf8
-SYBASE_DATABASE_URL=sybase://sa:your_password@localhost:5000/mydb?charset=utf8
+DATABASE_URL=sybase://sa:your_password@localhost:5000/mydb?charset=utf8
 ```
 
 ### Configuración Alternativa (Detallada)
@@ -217,6 +217,27 @@ class UserRepository extends AbstractRepository
     {
         $query = $this->createQuery('SELECT u FROM User u WHERE u.createdAt IS NOT NULL ORDER BY u.createdAt DESC');
         return $query->getResult();
+    }
+}
+```
+
+#### Inyección Directa de Repositorios
+
+```php
+<?php
+
+// Los repositorios se pueden inyectar directamente
+use App\Repository\UserRepository;
+
+class UserService
+{
+    public function __construct(
+        private UserRepository $userRepository
+    ) {}
+    
+    public function getActiveUsers(): array
+    {
+        return $this->userRepository->findActiveUsers();
     }
 }
 ```
