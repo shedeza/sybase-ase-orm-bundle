@@ -1,6 +1,6 @@
 # Sybase ASE ORM Bundle
 
-[![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)](https://github.com/shedeza/sybase-ase-orm-bundle)
+[![Version](https://img.shields.io/badge/version-1.0.5-blue.svg)](https://github.com/shedeza/sybase-ase-orm-bundle)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![PHP](https://img.shields.io/badge/php-%3E%3D8.1-blue.svg)](https://php.net/)
 [![Symfony](https://img.shields.io/badge/symfony-%3E%3D6.0-blue.svg)](https://symfony.com/)
