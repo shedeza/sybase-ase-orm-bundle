@@ -25,7 +25,7 @@ Flex will automatically:
 
 1. **Register the bundle** in `config/bundles.php`
 2. **Copy configuration** to `config/packages/sybase_ase_orm.yaml`
-3. **Add environment variable** `SYBASE_DATABASE_URL` to `.env`
+3. **Add environment variable** `DATABASE_SYBASE_URL` to `.env`
 4. **Display post-install message** with getting started instructions
 
 ## Manual Recipe Installation
@@ -46,7 +46,7 @@ The recipe configures:
 
 - **Bundle registration**: Automatically adds bundle to all environments
 - **Default configuration**: Sets up basic ORM configuration
-- **Environment variables**: Adds `SYBASE_DATABASE_URL` with example
+- **Environment variables**: Adds `DATABASE_SYBASE_URL` with example
 - **Entity mapping**: Configures `src/Entity` directory for entities
 
 ## Usage After Installation

@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **OQL**: Lenguaje de consulta orientado a objetos similar a DQL
 - **JOINs**: Soporte completo para JOINs con sintaxis ON y WITH (estilo Doctrine)
 - **Transacciones**: Manejo automático y manual de transacciones
-- **Configuración**: Soporte para DATABASE_URL y configuración detallada
+- **Configuración**: Soporte para DATABASE_SYBASE_URL y configuración detallada
 - **Optimizaciones**: Cache de metadatos, parsing OQL, Identity Map
 - **Testing**: Suite completa de tests unitarios
 

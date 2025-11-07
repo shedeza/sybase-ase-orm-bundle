@@ -30,7 +30,7 @@ class Category
 }
 
 // Configuración de conexión
-$databaseUrl = $_ENV['SYBASE_DATABASE_URL'] ?? 'sybase://sa:password@localhost:5000/testdb?charset=utf8';
+$databaseUrl = $_ENV['DATABASE_SYBASE_URL'] ?? 'sybase://sa:password@localhost:5000/testdb?charset=utf8';
 $config = DatabaseUrlParser::parseUrl($databaseUrl);
 
 try {

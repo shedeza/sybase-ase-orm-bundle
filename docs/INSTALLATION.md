@@ -52,7 +52,7 @@ return [
 # config/packages/sybase_ase_orm.yaml
 sybase_ase_orm:
   connections:
-    default: '%env(DATABASE_URL)%'
+    default: '%env(DATABASE_SYBASE_URL)%'
   entity_managers:
     default:
       connection: default
@@ -67,7 +67,7 @@ sybase_ase_orm:
 
 ```env
 # .env
-DATABASE_URL=sybase://username:password@host:port/database?charset=utf8
+DATABASE_SYBASE_URL=sybase://username:password@host:port/database?charset=utf8
 ```
 
 ## Verificar Instalación

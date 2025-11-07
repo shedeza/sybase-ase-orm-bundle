@@ -31,7 +31,7 @@ composer require shedeza/sybase-ase-orm-bundle
 # config/packages/sybase_ase_orm.yaml
 sybase_ase_orm:
   connections:
-    default: '%env(DATABASE_URL)%'
+    default: '%env(DATABASE_SYBASE_URL)%'
   entity_managers:
     default:
       connection: default

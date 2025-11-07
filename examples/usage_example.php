@@ -7,10 +7,10 @@ use Shedeza\SybaseAseOrmBundle\ORM\EntityManager;
 use Shedeza\SybaseAseOrmBundle\Entity\User;
 use Shedeza\SybaseAseOrmBundle\Entity\Post;
 
-// Configuración de conexión usando DATABASE_URL
+// Configuración de conexión usando DATABASE_SYBASE_URL
 use Shedeza\SybaseAseOrmBundle\DBAL\DatabaseUrlParser;
 
-$databaseUrl = $_ENV['SYBASE_DATABASE_URL'] ?? 'sybase://sa:password@localhost:5000/testdb?charset=utf8';
+$databaseUrl = $_ENV['DATABASE_SYBASE_URL'] ?? 'sybase://sa:password@localhost:5000/testdb?charset=utf8';
 $config = DatabaseUrlParser::parseUrl($databaseUrl);
 
 try {
