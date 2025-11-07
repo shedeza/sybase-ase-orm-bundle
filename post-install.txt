@@ -3,7 +3,7 @@
 <info>Getting started:</info>
 
   * Configure your database connection in <comment>.env</comment>:
-    <comment>SYBASE_DATABASE_URL=sybase://username:password@host:port/database?charset=utf8</comment>
+    <comment>DATABASE_URL=sybase://username:password@host:port/database?charset=utf8</comment>
 
   * Create your first entity:
     <comment>php bin/console make:entity</comment> (if using MakerBundle)

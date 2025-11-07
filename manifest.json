@@ -7,5 +7,25 @@
     },
     "env": {
         "DATABASE_URL": "sybase://sa:password@localhost:5000/mydb?charset=utf8"
-    }
+    },
+    "gitignore": [
+        "/.env.local",
+        "/.env.local.php",
+        "/.env.*.local"
+    ],
+    "post-install-output": [
+        "<bg=blue;fg=white>              Sybase ASE ORM Bundle              </>",
+        "",
+        "<info>Getting started:</info>",
+        "",
+        "  * Configure your database connection in <comment>.env</comment>:",
+        "    <comment>DATABASE_URL=sybase://username:password@host:port/database?charset=utf8</comment>",
+        "",
+        "  * Create your first entity in <comment>src/Entity/</comment>",
+        "",
+        "  * Use the EntityManager in your controllers:",
+        "    <comment>public function index(EntityManager $entityManager): Response</comment>",
+        "",
+        "<info>Documentation:</info> <comment>https://github.com/shedeza/sybase-ase-orm-bundle</comment>"
+    ]
 }
