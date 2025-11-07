@@ -5,13 +5,3 @@ services:
 
   Shedeza\SybaseAseOrmBundle\ORM\Mapping\AttributeReader:
     public: true
-
-  Shedeza\SybaseAseOrmBundle\ORM\Query\OQLParser:
-    public: true
-    
-  Shedeza\SybaseAseOrmBundle\ORM\Tools\SchemaValidator:
-    public: true
-    
-  Shedeza\SybaseAseOrmBundle\Command\ValidateSchemaCommand:
-    tags:
-      - { name: console.command }

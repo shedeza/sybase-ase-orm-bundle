@@ -58,12 +58,25 @@ class SybaseAseOrmExtension extends Extension
                 isset($config['connections'][$defaultConnection]) && 
                 isset($config['entity_managers'][$defaultEntityManager])) {
                 
-                $container->setAlias('sybase_ase_orm.connection', "sybase_ase_orm.connection.$defaultConnection")
+$container->setAlias('sybase_ase_orm.connection', "sybase_ase_orm.connection.$defaultConnection")
                     ->setPublic(false);
                 $container->setAlias('sybase_ase_orm.entity_manager', "sybase_ase_orm.entity_manager.$defaultEntityManager")
                     ->setPublic(true);
                 $container->setAlias(EntityManager::class, 'sybase_ase_orm.entity_manager')
                     ->setPublic(true);
+                
+                // Register dependent services
+                $container->register('sybase_ase_orm.oql_parser', \Shedeza\SybaseAseOrmBundle\ORM\Query\OQLParser::class)
+                    ->setArguments([new Reference('sybase_ase_orm.entity_manager')])
+                    ->setPublic(true);
+                    
+                $container->register('sybase_ase_orm.schema_validator', \Shedeza\SybaseAseOrmBundle\ORM\Tools\SchemaValidator::class)
+                    ->setArguments([new Reference('sybase_ase_orm.entity_manager')])
+                    ->setPublic(true);
+                    
+                $container->register('sybase_ase_orm.validate_schema_command', \Shedeza\SybaseAseOrmBundle\Command\ValidateSchemaCommand::class)
+                    ->setArguments([new Reference('sybase_ase_orm.entity_manager')])
+                    ->addTag('console.command');
             }
         }
     }
