@@ -49,12 +49,15 @@ class SybaseAseOrmExtension extends Extension
                 ->setPublic(false);
         }
 
-        // Set default services only if connections exist
+        // Set default services only if they exist and are configured
         if (!empty($config['connections']) && !empty($config['entity_managers'])) {
-            $defaultConnection = $config['default_connection'];
-            $defaultEntityManager = $config['default_entity_manager'];
+            $defaultConnection = $config['default_connection'] ?? null;
+            $defaultEntityManager = $config['default_entity_manager'] ?? null;
             
-            if (isset($config['connections'][$defaultConnection]) && isset($config['entity_managers'][$defaultEntityManager])) {
+            if ($defaultConnection && $defaultEntityManager && 
+                isset($config['connections'][$defaultConnection]) && 
+                isset($config['entity_managers'][$defaultEntityManager])) {
+                
                 $container->setAlias('sybase_ase_orm.connection', "sybase_ase_orm.connection.$defaultConnection")
                     ->setPublic(false);
                 $container->setAlias('sybase_ase_orm.entity_manager', "sybase_ase_orm.entity_manager.$defaultEntityManager")

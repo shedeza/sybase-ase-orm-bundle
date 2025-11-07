@@ -87,13 +87,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('default_connection')
-                    ->defaultValue('default')
-                    ->validate()
-                        ->ifTrue(function ($v) {
-                            return !is_string($v) || trim($v) === '';
-                        })
-                        ->thenInvalid('Default connection name must be a non-empty string')
-                    ->end()
+                    ->defaultNull()
                 ->end()
                 ->arrayNode('entity_managers')
                     ->useAttributeAsKey('name')
@@ -136,13 +130,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('default_entity_manager')
-                    ->defaultValue('default')
-                    ->validate()
-                        ->ifTrue(function ($v) {
-                            return !is_string($v) || trim($v) === '';
-                        })
-                        ->thenInvalid('Default entity manager name must be a non-empty string')
-                    ->end()
+                    ->defaultNull()
                 ->end()
             ->end();
 
