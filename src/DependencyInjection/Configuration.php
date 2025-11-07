@@ -35,8 +35,8 @@ class Configuration implements ConfigurationInterface
                                     throw new \InvalidArgumentException('Connection URL must be a non-empty string');
                                 }
                                 
-                                // Validar formato básico de URL
-                                if (!filter_var($v, FILTER_VALIDATE_URL) && !preg_match('/^sybase:\/\//', $v)) {
+                                // Validar formato básico de URL Sybase
+                                if (!preg_match('/^sybase:\/\/[^:]+:[^@]+@[^:]+:\d+\/\w+/', $v)) {
                                     throw new \InvalidArgumentException('Invalid connection URL format. Expected format: sybase://username:password@host:port/database');
                                 }
                                 
