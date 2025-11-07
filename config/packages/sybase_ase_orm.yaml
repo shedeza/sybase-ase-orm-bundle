@@ -3,7 +3,7 @@ sybase_ase_orm:
     default_entity_manager: default
     
     connections:
-        default: '%env(resolve:SYBASE_DATABASE_URL)%'
+        default: '%env(resolve:DATABASE_URL)%'
     
     entity_managers:
         default:

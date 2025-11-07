@@ -6,6 +6,6 @@
         "config/": "%CONFIG_DIR%/"
     },
     "env": {
-        "SYBASE_DATABASE_URL": "sybase://sa:password@localhost:5000/mydb?charset=utf8"
+        "DATABASE_URL": "sybase://sa:password@localhost:5000/mydb?charset=utf8"
     }
 }

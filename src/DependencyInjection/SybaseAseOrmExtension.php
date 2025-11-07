@@ -48,23 +48,19 @@ class SybaseAseOrmExtension extends Extension
                 ->setPublic(false);
         }
 
-        // Set default services
-        $defaultConnection = $config['default_connection'];
-        $defaultEntityManager = $config['default_entity_manager'];
-        
-        if (!isset($config['connections'][$defaultConnection])) {
-            throw new \InvalidArgumentException("Default connection '{$defaultConnection}' not found");
+        // Set default services only if connections exist
+        if (!empty($config['connections']) && !empty($config['entity_managers'])) {
+            $defaultConnection = $config['default_connection'];
+            $defaultEntityManager = $config['default_entity_manager'];
+            
+            if (isset($config['connections'][$defaultConnection]) && isset($config['entity_managers'][$defaultEntityManager])) {
+                $container->setAlias('sybase_ase_orm.connection', "sybase_ase_orm.connection.$defaultConnection")
+                    ->setPublic(false);
+                $container->setAlias('sybase_ase_orm.entity_manager', "sybase_ase_orm.entity_manager.$defaultEntityManager")
+                    ->setPublic(true);
+                $container->setAlias(EntityManager::class, 'sybase_ase_orm.entity_manager')
+                    ->setPublic(true);
+            }
         }
-        
-        if (!isset($config['entity_managers'][$defaultEntityManager])) {
-            throw new \InvalidArgumentException("Default entity manager '{$defaultEntityManager}' not found");
-        }
-
-        $container->setAlias('sybase_ase_orm.connection', "sybase_ase_orm.connection.$defaultConnection")
-            ->setPublic(false);
-        $container->setAlias('sybase_ase_orm.entity_manager', "sybase_ase_orm.entity_manager.$defaultEntityManager")
-            ->setPublic(true);
-        $container->setAlias(EntityManager::class, 'sybase_ase_orm.entity_manager')
-            ->setPublic(true);
     }
 }
