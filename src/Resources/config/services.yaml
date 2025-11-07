@@ -5,14 +5,3 @@ services:
 
   Shedeza\SybaseAseOrmBundle\ORM\Mapping\AttributeReader:
     public: true
-    
-  # Repository services for direct injection
-  Shedeza\SybaseAseOrmBundle\Repository\UserRepository:
-    factory: ['@sybase_ase_orm.entity_manager', 'getRepository']
-    arguments: ['Shedeza\SybaseAseOrmBundle\Entity\User']
-    public: true
-    
-  Shedeza\SybaseAseOrmBundle\Repository\PostRepository:
-    factory: ['@sybase_ase_orm.entity_manager', 'getRepository']
-    arguments: ['Shedeza\SybaseAseOrmBundle\Entity\Post']
-    public: true

@@ -78,13 +78,15 @@ $container->register('sybase_ase_orm.validate_schema_command', \Shedeza\SybaseAs
                     ->setArguments([new Reference('sybase_ase_orm.entity_manager')])
                     ->addTag('console.command');
                 
-// Register repository factory service
-                $container->register('sybase_ase_orm.repository_factory', \Shedeza\SybaseAseOrmBundle\ORM\Repository\RepositoryFactory::class)
-                    ->setArguments([new Reference('sybase_ase_orm.entity_manager')])
-                    ->setPublic(true);
+// Register repositories for entities
+                $this->registerRepositories($container, $config['entity_managers'][$defaultEntityManager]['mappings']);
 }
         }
     }
     
-
+private function registerRepositories(ContainerBuilder $container, array $mappings): void
+    {
+        // Store mapping info for compiler pass
+        $container->setParameter('sybase_ase_orm.entity_mappings', $mappings);
+    }
 }
