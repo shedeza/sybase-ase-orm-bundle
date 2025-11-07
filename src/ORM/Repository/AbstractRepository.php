@@ -5,6 +5,7 @@ namespace Shedeza\SybaseAseOrmBundle\ORM\Repository;
 use Shedeza\SybaseAseOrmBundle\ORM\EntityManager;
 use Shedeza\SybaseAseOrmBundle\ORM\Mapping\EntityMetadata;
 use Shedeza\SybaseAseOrmBundle\ORM\Query\Query;
+use Shedeza\SybaseAseOrmBundle\Exception\ConfigurationException;
 
 abstract class AbstractRepository implements RepositoryInterface
 {
@@ -12,8 +13,12 @@ abstract class AbstractRepository implements RepositoryInterface
     protected string $entityClass;
     protected EntityMetadata $metadata;
 
-    public function __construct(EntityManager $entityManager, string $entityClass)
+public function __construct(?EntityManager $entityManager = null, string $entityClass = '')
     {
+        if ($entityManager === null) {
+            throw ConfigurationException::entityManagerNotConfigured();
+        }
+        
         if (empty($entityClass) || !class_exists($entityClass)) {
             throw new \InvalidArgumentException("Invalid entity class: {$entityClass}");
         }
