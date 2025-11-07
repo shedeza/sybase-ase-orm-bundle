@@ -74,10 +74,17 @@ $container->setAlias('sybase_ase_orm.connection', "sybase_ase_orm.connection.$de
                     ->setArguments([new Reference('sybase_ase_orm.entity_manager')])
                     ->setPublic(true);
                     
-                $container->register('sybase_ase_orm.validate_schema_command', \Shedeza\SybaseAseOrmBundle\Command\ValidateSchemaCommand::class)
+$container->register('sybase_ase_orm.validate_schema_command', \Shedeza\SybaseAseOrmBundle\Command\ValidateSchemaCommand::class)
                     ->setArguments([new Reference('sybase_ase_orm.entity_manager')])
                     ->addTag('console.command');
-            }
+                
+// Register repository factory service
+                $container->register('sybase_ase_orm.repository_factory', \Shedeza\SybaseAseOrmBundle\ORM\Repository\RepositoryFactory::class)
+                    ->setArguments([new Reference('sybase_ase_orm.entity_manager')])
+                    ->setPublic(true);
+}
         }
     }
+    
+
 }
