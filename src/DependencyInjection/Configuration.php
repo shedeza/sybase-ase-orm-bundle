@@ -31,17 +31,24 @@ class Configuration implements ConfigurationInterface
                         ->beforeNormalization()
                             ->ifString()
                             ->then(function ($v) {
-                                if (!is_string($v) || trim($v) === '') {
-                                    throw new \InvalidArgumentException('Connection URL must be a non-empty string');
-                                }
-                                
-                                // Validar formato básico de URL Sybase
-                                if (!preg_match('/^sybase:\/\/[^:]+:[^@]+@[^:]+:\d+\/\w+/', $v)) {
-                                    throw new \InvalidArgumentException('Invalid connection URL format. Expected format: sybase://username:password@host:port/database');
-                                }
-                                
-                                return ['url' => $v];
-                            })
+                                    if (!is_string($v) || trim($v) === '') {
+                                        throw new \InvalidArgumentException('Connection URL must be a non-empty string');
+                                    }
+
+                                    // If the value is a parameter placeholder or an env placeholder,
+                                    // skip strict validation so Symfony recipes and parameter references
+                                    // (e.g. "%env(DATABASE_SYBASE_URL)%" or "%some_param%") do not fail.
+                                    if (strpos($v, '%env(') !== false || preg_match('/^%.*%$/', $v)) {
+                                        return ['url' => $v];
+                                    }
+
+                                    // Validar formato básico de URL Sybase
+                                    if (!preg_match('/^sybase:\/\/[^:]+:[^@]+@[^:]+:\d+\/[\w\-\.]+/', $v)) {
+                                        throw new \InvalidArgumentException('Invalid connection URL format. Expected format: sybase://username:password@host:port/database');
+                                    }
+
+                                    return ['url' => $v];
+                                })
                         ->end()
                         ->children()
                             ->scalarNode('url')->end()
