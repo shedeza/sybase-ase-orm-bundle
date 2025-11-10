@@ -10,9 +10,13 @@ class DatabaseUrlParser
             throw new \InvalidArgumentException('Database URL cannot be empty');
         }
 
+        // Trim whitespace and surrounding quotes that can appear when reading from .env
+        $url = trim($url);
+        $url = trim($url, "\"'\n\r\t ");
+
         $parsed = parse_url($url);
 
-        // parse_url can return an array even for malformed strings that lack a scheme
+        // parse_url can return false or miss the scheme if the input is malformed
         if ($parsed === false || empty($parsed['scheme']) || strtolower($parsed['scheme']) !== 'sybase') {
             throw new \InvalidArgumentException('Invalid database URL format');
         }
