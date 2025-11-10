@@ -47,11 +47,23 @@ class SybaseAseOrmExtension extends Extension
 
         // Register connections
         foreach ($config['connections'] as $name => $connectionConfig) {
-            // Parse database URL if provided
-            if (isset($connectionConfig['url'])) {
-                $connectionConfig = DatabaseUrlParser::parseUrl($connectionConfig['url']);
+            // Parse database URL if provided and if it's a literal sybase:// URL.
+            // If the value is an env placeholder (e.g. "%env(...)%") or a parameter
+            // placeholder, leave it as-is so Symfony can resolve it at runtime.
+            if (isset($connectionConfig['url']) && is_string($connectionConfig['url'])) {
+                $rawUrl = $connectionConfig['url'];
+                // Trim possible surrounding quotes from env files
+                $trimmed = trim($rawUrl, "\"'");
+
+                if (strpos($trimmed, '%env(') === false && !preg_match('/^%.*%$/', $trimmed) && stripos($trimmed, 'sybase://') === 0) {
+                    // Only parse if it's an actual sybase:// URL
+                    $connectionConfig = DatabaseUrlParser::parseUrl($trimmed);
+                } else {
+                    // Keep the original config (placeholder or non-sybase literal)
+                    $connectionConfig['url'] = $rawUrl;
+                }
             }
-            
+
             $container->register("sybase_ase_orm.connection.$name", Connection::class)
                 ->setArguments([$connectionConfig])
                 ->setPublic(false);
