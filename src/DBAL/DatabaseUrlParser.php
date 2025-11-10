@@ -11,8 +11,9 @@ class DatabaseUrlParser
         }
 
         $parsed = parse_url($url);
-        
-        if ($parsed === false) {
+
+        // parse_url can return an array even for malformed strings that lack a scheme
+        if ($parsed === false || empty($parsed['scheme']) || strtolower($parsed['scheme']) !== 'sybase') {
             throw new \InvalidArgumentException('Invalid database URL format');
         }
 
