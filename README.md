@@ -457,8 +457,74 @@ vendor/bin/phpunit
 
 - PHP 8.1+
 - Symfony 6.0+ o 7.0+
-- Extensión PDO_DBLIB
-- Sybase ASE 15.0+
+- Extensión PDO_DBLIB (p.ej. `pdo_dblib`) — se requiere un driver DB-lib compatible (FreeTDS)
+- Sybase ASE 15.0+ (o una instancia compatible con TDS/dblib)
+
+Nota: la extensión que proporciona el soporte `dblib` puede instalarse mediante el paquete de tu distribución (p. ej. `php-sybase` / `php-pdo-dblib`) o compilando/instalando vía PECL; los nombres de paquetes varían entre distribuciones. A continuación hay ejemplos y recomendaciones.
+
+### Instalación (ejemplos)
+
+En Debian/Ubuntu (ejemplo orientativo):
+
+```bash
+# Instalar FreeTDS y herramientas de compilación
+sudo apt update
+sudo apt install -y freetds-bin freetds-dev build-essential php-dev
+
+# Intentar instalar la extensión PDO_DBLIB desde paquetes si existe
+sudo apt install -y php-sybase || true
+
+# Si no hay paquete disponible, puedes intentar vía PECL (requiere php-dev):
+# sudo pecl install pdo_dblib
+# y luego habilitar la extensión en php.ini: extension=pdo_dblib.so
+```
+
+En CentOS/RHEL (ejemplo orientativo):
+
+```bash
+sudo yum install -y freetds freetds-devel php-devel make gcc
+# Luego instalar la extensión compatible para PHP (paquete o compilación/PECL)
+```
+
+Si usas una imagen Docker o contenedor, asegúrate de instalar FreeTDS y la extensión `pdo_dblib` en la imagen base.
+
+### Configurar FreeTDS
+
+FreeTDS usa `/etc/freetds/freetds.conf` para definir versiones TDS y hosts. Un ejemplo mínimo:
+
+```ini
+[sybase-server]
+    host = my-sybase-host.example
+    port = 5000
+    tds version = 5.0
+```
+
+En muchos entornos la URL `DATABASE_SYBASE_URL` es suficiente (ver más abajo), pero si tienes problemas de conectividad revisa `freetds.conf` y variable de entorno `TDSVER`.
+
+### Ejemplo de `DATABASE_SYBASE_URL` (.env)
+
+La librería soporta una URL en el formato:
+
+```
+sybase://username:password@host:port/database?charset=utf8
+```
+
+Ejemplo real en `.env`:
+
+```env
+# Format: sybase://username:password@host:port/database?charset=utf8
+DATABASE_SYBASE_URL=sybase://sa:SuperSecret@db.example.com:5000/my_database?charset=utf8
+```
+
+Si usas la configuración detallada en lugar de la URL, asegúrate de definir `host`, `port`, `database`, `username` y `password` en la sección `connections` de tu `config/packages/sybase_ase_orm.yaml`.
+
+### Solución de problemas comunes
+
+- Error de conexión / timeout: verifica que `freetds-bin` pueda hacer telnet/tsql al host/puerto.
+- Extensión PDO_DBLIB no encontrada: asegúrate de que la extensión esté instalada y habilitada (comprueba `php -m | grep dblib` o `php -i`).
+- `lastInsertId()` no devuelve valor esperado: algunos backends dblib tienen comportamientos distintos; prueba alternativas del servidor o consulta la documentación de FreeTDS/Sybase.
+
+Si necesitas ayuda con un error específico, adjunta la salida de los logs y el mensaje de error y te ayudo a diagnosticarlo.
 
 ## Optimizaciones Incluidas
 
