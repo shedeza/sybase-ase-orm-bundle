@@ -35,6 +35,12 @@ class Configuration implements ConfigurationInterface
                                         throw new \InvalidArgumentException('Connection URL must be a non-empty string');
                                     }
 
+                                    // Trim surrounding quotes and whitespace that may appear when using .env files
+                                    $v = trim($v);
+                                    if ((substr($v, 0, 1) === '"' && substr($v, -1) === '"') || (substr($v, 0, 1) === "'" && substr($v, -1) === "'")) {
+                                        $v = substr($v, 1, -1);
+                                    }
+
                                     // If the value is a parameter placeholder or an env placeholder,
                                     // skip strict validation so Symfony recipes and parameter references
                                     // (e.g. "%env(DATABASE_SYBASE_URL)%" or "%some_param%") do not fail.
@@ -42,12 +48,22 @@ class Configuration implements ConfigurationInterface
                                         return ['url' => $v];
                                     }
 
-                                    // Validar formato básico de URL Sybase
-                                    if (!preg_match('/^sybase:\/\/[^:]+:[^@]+@[^:]+:\d+\/[\w\-\.]+/', $v)) {
-                                        throw new \InvalidArgumentException('Invalid connection URL format. Expected format: sybase://username:password@host:port/database');
+                                    // Accept any string that starts with sybase:// and perform a lightweight parse
+                                    if (stripos($v, 'sybase://') === 0) {
+                                        $parts = parse_url($v);
+                                        if ($parts === false || !isset($parts['host']) || !isset($parts['user'])) {
+                                            throw new \InvalidArgumentException('Invalid connection URL format. Expected format: sybase://username:password@host:port/database');
+                                        }
+
+                                        // path contains the database name prefixed with '/'
+                                        if (!isset($parts['path']) || trim($parts['path'], '/') === '') {
+                                            throw new \InvalidArgumentException('Invalid connection URL format. Database name is missing in the path portion');
+                                        }
+
+                                        return ['url' => $v];
                                     }
 
-                                    return ['url' => $v];
+                                    throw new \InvalidArgumentException('Invalid connection URL format. Expected format: sybase://username:password@host:port/database');
                                 })
                         ->end()
                         ->children()

@@ -73,6 +73,26 @@ $cases = [
         'default_connection' => 'default',
         'default_entity_manager' => 'default'
     ]
+    ,
+    'user_url' => [
+        'connections' => [
+            'default' => 'sybase://rdticfaa00:FEpEaLA_Pf@148.206.141.2:2004/aabdd02'
+        ],
+        'entity_managers' => [
+            'default' => [
+                'connection' => 'default',
+                'mappings' => [
+                    'App' => [
+                        'type' => 'attribute',
+                        'dir' => '%kernel.project_dir%/src/Entity',
+                        'prefix' => 'App\\Entity'
+                    ]
+                ]
+            ]
+        ],
+        'default_connection' => 'default',
+        'default_entity_manager' => 'default'
+    ]
 ];
 
 foreach ($cases as $name => $cfg) {
